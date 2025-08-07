@@ -122,10 +122,30 @@ function addMessage(content, type, sources = null, isWelcome = false) {
     let html = `<div class="message-content">${displayContent}</div>`;
     
     if (sources && sources.length > 0) {
+        // Format sources - handle both new structured format and legacy format
+        const formattedSources = sources.map(source => {
+            // Check if source is an object with text property (new structured format)
+            if (typeof source === 'object' && source !== null && source.text) {
+                // New structured format with optional link
+                if (source.link) {
+                    return `<a href="${escapeHtml(source.link)}" target="_blank" class="source-link">${escapeHtml(source.text)}</a>`;
+                } else {
+                    return escapeHtml(source.text);
+                }
+            } else if (typeof source === 'string') {
+                // Legacy string format - backward compatibility
+                return escapeHtml(source);
+            } else {
+                // Fallback for any other format - shouldn't happen but safety
+                console.warn('Unexpected source format:', source);
+                return escapeHtml(String(source));
+            }
+        });
+        
         html += `
             <details class="sources-collapsible">
                 <summary class="sources-header">Sources</summary>
-                <div class="sources-content">${sources.join(', ')}</div>
+                <div class="sources-content">${formattedSources.join('')}</div>
             </details>
         `;
     }

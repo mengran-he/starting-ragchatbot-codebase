@@ -40,10 +40,15 @@ class QueryRequest(BaseModel):
     query: str
     session_id: Optional[str] = None
 
+class SourceInfo(BaseModel):
+    """Information about a source with optional link"""
+    text: str
+    link: Optional[str] = None
+
 class QueryResponse(BaseModel):
     """Response model for course queries"""
     answer: str
-    sources: List[str]
+    sources: List[SourceInfo]
     session_id: str
 
 class CourseStats(BaseModel):
@@ -65,9 +70,22 @@ async def query_documents(request: QueryRequest):
         # Process query using RAG system
         answer, sources = rag_system.query(request.query, session_id)
         
+        # Convert sources to SourceInfo objects
+        source_infos = []
+        for source in sources:
+            if isinstance(source, dict):
+                # New structured format with link
+                source_infos.append(SourceInfo(
+                    text=source.get("text", ""),
+                    link=source.get("link")
+                ))
+            else:
+                # Backward compatibility: plain string sources
+                source_infos.append(SourceInfo(text=str(source)))
+        
         return QueryResponse(
             answer=answer,
-            sources=sources,
+            sources=source_infos,
             session_id=session_id
         )
     except Exception as e:
