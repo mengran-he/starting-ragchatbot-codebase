@@ -5,7 +5,15 @@ const API_URL = '/api';
 let currentSessionId = null;
 
 // DOM elements
-let chatMessages, chatInput, sendButton, totalCourses, courseTitles, newChatBtn;
+let chatMessages, chatInput, sendButton, totalCourses, courseTitles, newChatBtn, themeToggle;
+
+// Apply saved theme before DOM paints to avoid flash
+(function () {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,7 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     totalCourses = document.getElementById('totalCourses');
     courseTitles = document.getElementById('courseTitles');
     newChatBtn = document.getElementById('newChatBtn');
-    
+    themeToggle = document.getElementById('themeToggle');
+
     setupEventListeners();
     createNewSession();
     loadCourseStats();
@@ -24,6 +33,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Event Listeners
 function setupEventListeners() {
+    // Theme toggle
+    themeToggle.addEventListener('click', () => {
+        const isCurrentlyLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isCurrentlyLight) {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'dark');
+            themeToggle.setAttribute('aria-label', 'Switch to light mode');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+        }
+    });
+
     // New chat button
     newChatBtn.addEventListener('click', startNewChat);
 
