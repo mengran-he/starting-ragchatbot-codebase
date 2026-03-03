@@ -5,7 +5,25 @@
       "Bash(curl:*)",
       "Bash(pkill:*)",
       "Bash(./run.sh)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_install",
+      "Bash(open:*)",
+      "Bash(lsof:*)",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_network_requests",
+      "mcp__playwright__browser_run_code",
+      "Bash(python3:*)",
+      "Bash(claude config:*)",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_press_key",
+      "Bash(uv:*)"
     ],
     "deny": []
   }
